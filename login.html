@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Buyer Login | Charu Mart</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Floating Clouds Background -->
+  <div class="bg-cloud cloud-1"></div>
+  <div class="bg-cloud cloud-2"></div>
+
+  <div class="auth-container">
+    
+    <a href="index.html" class="back-home">🌱 ← Back to Role Selection</a>
+
+    <div class="auth-card">
+      <div class="auth-header">
+        <div class="role-icon" style="margin: 0 auto 1rem;">🛍️</div>
+        <h2>Welcome Back!</h2>
+        <p>Login to explore your saved items & market deals</p>
+      </div>
+
+      <form id="buyerLoginForm">
+        
+        <!-- Email/Phone Input -->
+        <div class="form-group">
+          <label for="buyerEmail">Email address or Phone</label>
+          <input type="text" id="buyerEmail" class="form-control" placeholder="buyer@example.com" required>
+        </div>
+
+        <!-- Password Input -->
+        <div class="form-group">
+          <label for="buyerPassword">Password</label>
+          <div class="input-wrapper">
+            <input type="password" id="buyerPassword" class="form-control" placeholder="••••••••" required>
+            <button type="button" class="toggle-password" id="togglePasswordBtn">👁️</button>
+          </div>
+        </div>
+
+        <!-- Extra Actions -->
+        <div class="form-actions">
+          <label class="remember-me">
+            <input type="checkbox" id="rememberMe"> Remember me
+          </label>
+          <a href="#" class="forgot-link" onclick="showCutePopup('🌸 Password reset link sent to your email!')">Forgot password?</a>
+        </div>
+
+        <!-- Login Button -->
+        <button type="submit" class="btn-ghibli btn-full">Login as Buyer ✨</button>
+      </form>
+
+      <div class="divider">
+        <span>or sign in with</span>
+      </div>
+
+      <!-- Social Logins -->
+      <div class="social-logins">
+        <button class="btn-social" onclick="showCutePopup('🌐 Google login simulation connected!')">
+          🌐 Google
+        </button>
+        <button class="btn-social" onclick="showCutePopup('🍎 Apple ID simulation connected!')">
+          🍎 Apple
+        </button>
+      </div>
+
+      <div class="auth-footer">
+        Don't have an account? <a href="#" onclick="showCutePopup('🌱 Registration page opens here!')">Sign up</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

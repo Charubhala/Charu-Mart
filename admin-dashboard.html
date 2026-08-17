@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Suite | Charu Mart</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Top Navbar -->
+  <nav class="navbar">
+    <a href="admin-dashboard.html" class="nav-brand"><span>👑</span> Admin Operations</a>
+    <ul class="nav-links">
+      <li><a href="admin-dashboard.html">📜 Operations</a></li>
+      <li><a href="#marketplaceControl">⚙️ Control Center</a></li>
+      <li><a href="index.html">🚪 Exit Suite</a></li>
+    </ul>
+  </nav>
+
+  <div class="home-container">
+    
+    <!-- Welcome Heading -->
+    <div style="margin-bottom: 2rem;">
+      <h1 style="font-family: var(--font-title); color: var(--primary-emerald); font-size: 2.2rem;">Platform Overview & Controls 👑</h1>
+      <p style="color: var(--text-muted);">Manage users, oversee merchant store applications, and audit platform activities.</p>
+    </div>
+
+    <!-- Admin Metric Cards -->
+    <div class="dashboard-grid">
+      <div class="stat-card">
+        <div class="stat-icon">👥</div>
+        <div class="stat-info">
+          <h4>Total Buyers</h4>
+          <div class="stat-value">1,420</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🏡</div>
+        <div class="stat-info">
+          <h4>Active Sellers</h4>
+          <div class="stat-value">84</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">📈</div>
+        <div class="stat-info">
+          <h4>Gross Revenue</h4>
+          <div class="stat-value">$34,890</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">⚖️</div>
+        <div class="stat-info">
+          <h4>Pending Reviews</h4>
+          <div class="stat-value" id="pendingReviewsCount">2</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Marketplace Management Section -->
+    <div class="dashboard-table-card" id="marketplaceControl">
+      
+      <div class="tab-nav">
+        <button class="tab-btn active" onclick="switchAdminTab('sellers')">Store Applications</button>
+        <button class="tab-btn" onclick="switchAdminTab('users')">User Moderation</button>
+      </div>
+
+      <!-- Store Applications Table -->
+      <div id="sellersTab">
+        <table class="custom-table">
+          <thead>
+            <tr>
+              <th>Applicant Store</th>
+              <th>Owner</th>
+              <th>Category</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="sellerAppsList">
+            <tr>
+              <td><strong>🍃 Forest Clay Studio</strong></td>
+              <td>Sarah Lin</td>
+              <td>Handmade Ceramics</td>
+              <td><span class="status-tag status-badge-review">Pending Approval</span></td>
+              <td>
+                <button class="action-btn-sm" onclick="approveStore(this, 'Forest Clay Studio')">✅</button>
+                <button class="action-btn-sm" onclick="rejectStore(this, 'Forest Clay Studio')">❌</button>
+              </td>
+            </tr>
+            <tr>
+              <td><strong>🧶 Wool & Weaver</strong></td>
+              <td>Marcus Bell</td>
+              <td>Textiles & Apparel</td>
+              <td><span class="status-tag status-badge-review">Pending Approval</span></td>
+              <td>
+                <button class="action-btn-sm" onclick="approveStore(this, 'Wool & Weaver')">✅</button>
+                <button class="action-btn-sm" onclick="rejectStore(this, 'Wool & Weaver')">❌</button>
+              </td>
+            </tr>
+            <tr>
+              <td><strong>🪴 Cozy Greenery</strong></td>
+              <td>Elena Rostova</td>
+              <td>Plants & Pots</td>
+              <td><span class="status-tag status-badge-approved">Approved</span></td>
+              <td>
+                <button class="action-btn-sm" onclick="showCutePopup('🔍 Inspecting store logs...')">🔍</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+
+  </div>
+
+  <footer>
+    <p>👑 Charu Mart Operations & Control Center • 2026</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

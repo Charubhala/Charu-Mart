@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Storefront | Charu Mart</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Top Navbar -->
+  <nav class="navbar">
+    <a href="home.html" class="nav-brand"><span>✨</span> Charu Mart</a>
+
+    <div class="nav-search">
+      <span class="search-icon-btn">🔍</span>
+      <input type="text" id="searchInput" placeholder="Search cozy handmade crafts, items & electronics...">
+    </div>
+
+    <ul class="nav-links">
+      <li><a href="home.html">🏠 Home</a></li>
+      <li><a href="#categories">📁 Categories</a></li>
+      <li><a href="#" id="wishlistNavLink">❤️ Wishlist <span class="badge-count" id="wishlistCount">0</span></a></li>
+      <li><a href="#" id="cartNavLink">🛒 Cart <span class="badge-count" id="cartCount">0</span></a></li>
+      <li><a href="index.html">👤 Switch Role</a></li>
+    </ul>
+  </nav>
+
+  <div class="home-container">
+    
+    <!-- Hero Banner -->
+    <section class="store-hero">
+      <div class="hero-text-content">
+        <span class="hero-tag">✨ Spring Collection 2026</span>
+        <h1>Handcrafted Wonders directly to your doorstep</h1>
+        <p>Explore magical items carefully created by top artisans and verified marketplace sellers.</p>
+        <a href="#products" class="btn-ghibli">Shop Now 🛍️</a>
+      </div>
+      <div class="hero-art">🏡🌱</div>
+    </section>
+
+    <!-- Categories Section -->
+    <section id="categories">
+      <h2 class="section-title">✨ Explore Categories</h2>
+      <div class="categories-grid">
+        <div class="category-card" onclick="filterCategory('all')">
+          <div class="category-icon">🌟</div>
+          <div class="category-name">All Items</div>
+        </div>
+        <div class="category-card" onclick="filterCategory('fashion')">
+          <div class="category-icon">👗</div>
+          <div class="category-name">Fashion</div>
+        </div>
+        <div class="category-card" onclick="filterCategory('electronics')">
+          <div class="category-icon">🎧</div>
+          <div class="category-name">Electronics</div>
+        </div>
+        <div class="category-card" onclick="filterCategory('home')">
+          <div class="category-icon">🪴</div>
+          <div class="category-name">Home & Living</div>
+        </div>
+        <div class="category-card" onclick="filterCategory('beauty')">
+          <div class="category-icon">✨</div>
+          <div class="category-name">Beauty</div>
+        </div>
+        <div class="category-card" onclick="filterCategory('sports')">
+          <div class="category-icon">⚽</div>
+          <div class="category-name">Sports</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Products Showcase Section -->
+    <section id="products">
+      <h2 class="section-title">🌿 Featured Discoveries</h2>
+      <div class="products-grid" id="productsGrid">
+        
+        <!-- Product Card 1 -->
+        <div class="product-card" data-category="home">
+          <span class="product-badge">Best Seller</span>
+          <button class="wishlist-btn" onclick="toggleWishlist(this, 'Handcrafted Terrarium Pot')">🤍</button>
+          <div class="product-img-box">🪴</div>
+          <h3 class="product-title">Handcrafted Terrarium Pot</h3>
+          <p class="product-desc">Miniature ecosystem in a vintage glass pot.</p>
+          <div class="product-rating">★ 4.9 (128 reviews)</div>
+          <div class="product-footer">
+            <span class="product-price">$24.99</span>
+            <button class="add-cart-btn" onclick="addToCart('Handcrafted Terrarium Pot')">+ Add to Cart</button>
+          </div>
+        </div>
+
+        <!-- Product Card 2 -->
+        <div class="product-card" data-category="electronics">
+          <span class="product-badge">New</span>
+          <button class="wishlist-btn" onclick="toggleWishlist(this, 'Retro Wooden Speaker')">🤍</button>
+          <div class="product-img-box">📻</div>
+          <h3 class="product-title">Retro Wooden Speaker</h3>
+          <p class="product-desc">Wireless acoustic speaker with warm bass tones.</p>
+          <div class="product-rating">★ 4.8 (85 reviews)</div>
+          <div class="product-footer">
+            <span class="product-price">$59.00</span>
+            <button class="add-cart-btn" onclick="addToCart('Retro Wooden Speaker')">+ Add to Cart</button>
+          </div>
+        </div>
+
+        <!-- Product Card 3 -->
+        <div class="product-card" data-category="fashion">
+          <span class="product-badge">Popular</span>
+          <button class="wishlist-btn" onclick="toggleWishlist(this, 'Ghibli Floral Totebag')">🤍</button>
+          <div class="product-img-box">👜</div>
+          <h3 class="product-title">Ghibli Floral Totebag</h3>
+          <p class="product-desc">Organic canvas tote with embroidered leaf motifs.</p>
+          <div class="product-rating">★ 5.0 (210 reviews)</div>
+          <div class="product-footer">
+            <span class="product-price">$18.50</span>
+            <button class="add-cart-btn" onclick="addToCart('Ghibli Floral Totebag')">+ Add to Cart</button>
+          </div>
+        </div>
+
+        <!-- Product Card 4 -->
+        <div class="product-card" data-category="beauty">
+          <span class="product-badge">Organic</span>
+          <button class="wishlist-btn" onclick="toggleWishlist(this, 'Botanical Essential Oils')">🤍</button>
+          <div class="product-img-box">🧪</div>
+          <h3 class="product-title">Botanical Essential Oils</h3>
+          <p class="product-desc">Pure lavender & eucalyptus extract set.</p>
+          <div class="product-rating">★ 4.7 (92 reviews)</div>
+          <div class="product-footer">
+            <span class="product-price">$15.00</span>
+            <button class="add-cart-btn" onclick="addToCart('Botanical Essential Oils')">+ Add to Cart</button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </div>
+
+  <footer>
+    <p>🌱 Charu Mart Marketplace • 2026 Student Project</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

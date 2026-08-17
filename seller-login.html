@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seller Hub Login | Charu Mart</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Floating Background Clouds -->
+  <div class="bg-cloud cloud-1"></div>
+  <div class="bg-cloud cloud-3"></div>
+
+  <div class="auth-container">
+    
+    <a href="index.html" class="back-home">🌾 ← Back to Role Selection</a>
+
+    <div class="auth-card seller-border-highlight">
+      <div class="auth-header">
+        <span class="seller-badge">Artisan & Merchant Portal</span>
+        <div class="role-icon" style="margin: 0.5rem auto 1rem; background: #FFF9EE;">🏡</div>
+        <h2>Seller Hub Login</h2>
+        <p>Manage your handcrafted goods, storefront & inventory</p>
+      </div>
+
+      <form id="sellerLoginForm">
+        
+        <!-- Seller Email -->
+        <div class="form-group">
+          <label for="sellerEmail">Seller Email address</label>
+          <input type="email" id="sellerEmail" class="form-control" placeholder="artisan@charumart.com" required>
+        </div>
+
+        <!-- Password Input -->
+        <div class="form-group">
+          <label for="sellerPassword">Password</label>
+          <div class="input-wrapper">
+            <input type="password" id="sellerPassword" class="form-control" placeholder="••••••••" required>
+            <button type="button" class="toggle-password" id="toggleSellerPasswordBtn">👁️</button>
+          </div>
+        </div>
+
+        <!-- Extra Actions -->
+        <div class="form-actions">
+          <label class="remember-me">
+            <input type="checkbox" id="sellerRemember"> Remember store session
+          </label>
+          <a href="#" class="forgot-link" style="color: var(--accent-gold);" onclick="showCutePopup('🌻 Password recovery sent to artisan email!')">Forgot password?</a>
+        </div>
+
+        <!-- Seller Login Button -->
+        <button type="submit" class="btn-ghibli btn-gold btn-full">Enter Seller Dashboard 🌾</button>
+      </form>
+
+      <div class="divider">
+        <span>new merchant?</span>
+      </div>
+
+      <div class="auth-footer">
+        Want to sell on Charu Mart? <a href="#" style="color: var(--accent-gold);" onclick="showCutePopup('🎨 Merchant application form opening!')">Apply for Storefront</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

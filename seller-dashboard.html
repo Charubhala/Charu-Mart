@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seller Dashboard | Charu Mart</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Top Navbar -->
+  <nav class="navbar">
+    <a href="seller-dashboard.html" class="nav-brand"><span>🌾</span> Seller Hub</a>
+    <ul class="nav-links">
+      <li><a href="seller-dashboard.html">📊 Overview</a></li>
+      <li><a href="#productsTable">📦 Products</a></li>
+      <li><a href="index.html">🚪 Exit Store</a></li>
+    </ul>
+  </nav>
+
+  <div class="home-container">
+    
+    <!-- Welcome Heading -->
+    <div style="margin-bottom: 2rem;">
+      <h1 style="font-family: var(--font-title); color: var(--primary-emerald); font-size: 2.2rem;">Artisan Store Overview ✨</h1>
+      <p style="color: var(--text-muted);">Track your store performance, orders, and listing status.</p>
+    </div>
+
+    <!-- Overview Stat Cards -->
+    <div class="dashboard-grid">
+      <div class="stat-card">
+        <div class="stat-icon">💰</div>
+        <div class="stat-info">
+          <h4>Total Revenue</h4>
+          <div class="stat-value">$1,248.50</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">📦</div>
+        <div class="stat-info">
+          <h4>Orders Completed</h4>
+          <div class="stat-value">42</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🪴</div>
+        <div class="stat-info">
+          <h4>Active Listings</h4>
+          <div class="stat-value" id="activeProductsCount">3</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Product Management Section -->
+    <div class="dashboard-table-card" id="productsTable">
+      <div class="table-header-actions">
+        <h2 style="font-family: var(--font-title); color: var(--primary-emerald);">Store Inventory</h2>
+        <button class="btn-ghibli btn-gold" onclick="addDemoProduct()">+ Add New Product 🎨</button>
+      </div>
+
+      <table class="custom-table">
+        <thead>
+          <tr>
+            <th>Product Name</th>
+            <th>Category</th>
+            <th>Price</th>
+            <th>Stock</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="sellerProductList">
+          <tr>
+            <td><strong>🪴 Terrarium Pot</strong></td>
+            <td>Home & Living</td>
+            <td>$24.99</td>
+            <td>18 pcs</td>
+            <td><span class="status-tag status-active">In Stock</span></td>
+            <td>
+              <button class="action-btn-sm" onclick="showCutePopup('✏️ Editing Terrarium Pot details...')">✏️</button>
+              <button class="action-btn-sm" onclick="deleteProduct(this, 'Terrarium Pot')">🗑️</button>
+            </td>
+          </tr>
+          <tr>
+            <td><strong>📻 Retro Speaker</strong></td>
+            <td>Electronics</td>
+            <td>$59.00</td>
+            <td>5 pcs</td>
+            <td><span class="status-tag status-active">In Stock</span></td>
+            <td>
+              <button class="action-btn-sm" onclick="showCutePopup('✏️ Editing Retro Speaker details...')">✏️</button>
+              <button class="action-btn-sm" onclick="deleteProduct(this, 'Retro Speaker')">🗑️</button>
+            </td>
+          </tr>
+          <tr>
+            <td><strong>👜 Floral Totebag</strong></td>
+            <td>Fashion</td>
+            <td>$18.50</td>
+            <td>0 pcs</td>
+            <td><span class="status-tag status-pending">Restocking</span></td>
+            <td>
+              <button class="action-btn-sm" onclick="showCutePopup('✏️ Editing Floral Totebag details...')">✏️</button>
+              <button class="action-btn-sm" onclick="deleteProduct(this, 'Floral Totebag')">🗑️</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <footer>
+    <p>🌾 Charu Mart Artisan Merchant Center • 2026</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Suite Login | Charu Mart</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Floating Background Clouds -->
+  <div class="bg-cloud cloud-2"></div>
+  <div class="bg-cloud cloud-3"></div>
+
+  <div class="auth-container">
+    
+    <a href="index.html" class="back-home">📜 ← Back to Role Selection</a>
+
+    <div class="auth-card admin-card-border">
+      <div class="auth-header">
+        <span class="admin-badge">Platform Operations & Control</span>
+        <div class="role-icon" style="margin: 0.5rem auto 1rem; background: #FFF4EC;">👑</div>
+        <h2>Admin Suite Login</h2>
+        <p>Manage users, storefront approvals & platform operations</p>
+      </div>
+
+      <form id="adminLoginForm">
+        
+        <!-- Admin Email -->
+        <div class="form-group">
+          <label for="adminEmail">Admin Email address</label>
+          <input type="email" id="adminEmail" class="form-control" placeholder="admin@charumart.com" required>
+        </div>
+
+        <!-- Password Input -->
+        <div class="form-group">
+          <label for="adminPassword">Password</label>
+          <div class="input-wrapper">
+            <input type="password" id="adminPassword" class="form-control" placeholder="••••••••" required>
+            <button type="button" class="toggle-password" id="toggleAdminPasswordBtn">👁️</button>
+          </div>
+        </div>
+
+        <!-- Extra Actions -->
+        <div class="form-actions">
+          <label class="remember-me">
+            <input type="checkbox" id="adminRemember"> Secure 2FA Session
+          </label>
+          <a href="#" class="forgot-link" style="color: var(--accent-peach);" onclick="showCutePopup('🔑 Admin recovery instructions sent to system administrator!')">Forgot key?</a>
+        </div>
+
+        <!-- Admin Login Button -->
+        <button type="submit" class="btn-ghibli btn-peach btn-full">Access Admin Suite 📜</button>
+      </form>
+
+      <div class="divider">
+        <span>security notice</span>
+      </div>
+
+      <div class="auth-footer">
+        Restricted Portal • Authorized Staff Only <br>
+        <a href="index.html" style="color: var(--accent-peach);">Return to Main Hub</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
