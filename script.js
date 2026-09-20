@@ -308,3 +308,219 @@ function updateAdminReviewCount() {
 function switchAdminTab(tabName) {
   showCutePopup(`📜 Loaded view: ${tabName.toUpperCase()}`);
 }
+// Example login script connection
+const loginBtn = document.getElementById('loginBtn'); // Change to match your button's ID
+
+if (loginBtn) {
+    loginBtn.addEventListener('click', async (e) => {
+        e.preventDefault(); // Stop form from refreshing the page
+
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+
+        try {
+            const response = await fetch('/api/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                alert('Login successful! Welcome, ' + data.username);
+                // Redirect based on role
+                if (data.role === 'seller') {
+                    window.location.href = 'seller-dashboard.html';
+                } else if (data.role === 'admin') {
+                    window.location.href = 'admin-dashboard.html';
+                } else {
+                    window.location.href = 'home.html';
+                }
+            } else {
+                alert('Error: ' + data.error);
+            }
+        } catch (err) {
+            console.error('Login error:', err);
+            alert('Something went wrong connecting to the server!');
+        }
+    });
+}
+// Registration script connection
+const registerBtn = document.getElementById('registerBtn'); // Change to match your register button's ID
+
+if (registerBtn) {
+    registerBtn.addEventListener('click', async (e) => {
+        e.preventDefault(); // Stop form from refreshing the page
+
+        const username = document.getElementById('regUsername').value; // Adjust ID if needed
+        const password = document.getElementById('regPassword').value; // Adjust ID if needed
+        const role = document.getElementById('regRole') ? document.getElementById('regRole').value : 'buyer'; // Default to buyer if no role selector
+
+        try {
+            const response = await fetch('/api/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password, role })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                alert('Registration successful! Please login.');
+                window.location.href = 'login.html'; // Redirect to login page
+            } else {
+                alert('Error: ' + data.error);
+            }
+        } catch (err) {
+            console.error('Registration error:', err);
+            alert('Something went wrong connecting to the server!');
+        }
+    });
+}
+// Seller Add Product Connection
+const addProductBtn = document.getElementById('addProductBtn');
+
+if (addProductBtn) {
+    addProductBtn.addEventListener('click', async (e) => {
+        e.preventDefault();
+
+        const name = document.getElementById('productName').value;
+        const price = parseFloat(document.getElementById('productPrice').value);
+        const seller = localStorage.getItem('username') || 'Unknown Seller'; // Gets logged-in seller name
+
+        try {
+            const response = await fetch('/api/products', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, price, seller })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                alert('Product added successfully!');
+                location.reload(); // Refresh page to show update
+            } else {
+                alert('Error: ' + data.error);
+            }
+        } catch (err) {
+            console.error('Error adding product:', err);
+            alert('Something went wrong connecting to the server!');
+        }
+    });
+}
+// Function to prompt seller and save product to SQLite database
+async function addDemoProduct() {
+    const name = prompt("Enter product name:");
+    if (!name) return; // Cancelled
+
+    const priceInput = prompt("Enter product price ($):");
+    if (!priceInput) return;
+    const price = parseFloat(priceInput);
+
+    const seller = localStorage.getItem('username') || 'Charu Artisan';
+
+    try {
+        const response = await fetch('/api/products', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, price, seller })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            alert('Product successfully added to database!');
+            location.reload(); // Refresh page to see changes
+        } else {
+            alert('Error: ' + data.error);
+        }
+    } catch (err) {
+        console.error('Error:', err);
+        alert('Failed to connect to server!');
+    }
+}
+// Fetch and display database products on the buyer home page
+async function loadProducts() {
+    const productContainer = document.getElementById('productsGrid');
+    
+    if (!productContainer) return; // Exit if not on home page
+
+    try {
+        const response = await fetch('/api/products');
+        const products = await response.json();
+
+        if (products.length === 0) return; // Keep dummy cards if database is empty
+
+        // Optional: clear dummy cards or prepend database items
+        // For now, let's append database items as new product cards:
+        products.forEach(product => {
+            const productCard = document.createElement('div');
+            productCard.className = 'product-card';
+            productCard.setAttribute('data-category', 'all');
+            productCard.innerHTML = `
+                <span class="product-badge">Live Listing</span>
+                <button class="wishlist-btn" onclick="toggleWishlist(this, '${product.name}')">🤍</button>
+                <div class="product-img-box">📦</div>
+                <h3 class="product-title">${product.name}</h3>
+                <p class="product-desc">Seller: ${product.seller}</p>
+                <div class="product-rating">★ 5.0 (New)</div>
+                <div class="product-footer">
+                    <span class="product-price">$${product.price.toFixed(2)}</span>
+                    <button class="add-cart-btn" onclick="addToCart('${product.name}')">+ Add to Cart</button>
+                </div>
+            `;
+            productContainer.appendChild(productCard);
+        });
+    } catch (err) {
+        console.error('Error loading products:', err);
+    }
+}
+
+window.addEventListener('DOMContentLoaded', loadProducts);
+// Get all users (Admin only)
+app.get('/api/admin/users', (req, res) => {
+    db.all("SELECT id, username, role FROM users", [], (err, rows) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json(rows);
+    });
+});
+
+// Delete a product listing (Admin moderation)
+app.delete('/api/admin/products/:id', (req, res) => {
+    const productId = req.params.id;
+    db.run("DELETE FROM products WHERE id = ?", [productId], function(err) {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json({ message: "Product removed successfully by admin" });
+    });
+});
+// Fetch and display users in the Admin Dashboard
+async function loadAdminUsers() {
+    // You can add a second tab table or container in your HTML for users if needed
+    const userTableBody = document.getElementById('userListBody'); 
+    if (!userTableBody) return;
+
+    try {
+        const response = await fetch('/api/admin/users');
+        const users = await response.json();
+
+        userTableBody.innerHTML = '';
+
+        users.forEach(user => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td><strong>${user.username}</strong></td>
+                <td><span class="status-tag">${user.role}</span></td>
+                <td>
+                    <button class="action-btn-sm" onclick="alert('Managing user ID: ${user.id}')">⚙️</button>
+                </td>
+            `;
+            userTableBody.appendChild(row);
+        });
+    } catch (err) {
+        console.error('Error loading admin users:', err);
+    }
+}
+
+window.addEventListener('DOMContentLoaded', loadAdminUsers);
