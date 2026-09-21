@@ -569,3 +569,142 @@ async function loadAdminUsers() {
 }
 
 window.addEventListener('DOMContentLoaded', loadAdminUsers);
+// ===================================================
+// STAGE 8 - CHECKOUT & ORDERS FRONTEND FUNCTIONS
+// ===================================================
+
+// Handle User Registration from register.html
+async function handleRegister(event) {
+    event.preventDefault();
+    
+    const username = document.getElementById('reg-username').value;
+    const password = document.getElementById('reg-password').value;
+    const role = document.getElementById('reg-role').value;
+
+    try {
+        const response = await fetch('/api/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password, role })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            showCutePopup('✨ Registration successful! Redirecting to login...');
+            setTimeout(() => {
+                window.location.href = 'login.html';
+            }, 1500);
+        } else {
+            showCutePopup('⚠️ Error: ' + data.error);
+        }
+    } catch (err) {
+        console.error('Registration error:', err);
+        showCutePopup('⚠️ Failed to connect to server!');
+    }
+}
+
+// Load Checkout Summary on checkout.html
+async function loadCheckoutSummary() {
+    const userId = localStorage.getItem('userId') || 1;
+    const summaryContainer = document.getElementById('checkout-summary');
+    if (!summaryContainer) return;
+
+    try {
+        const response = await fetch(`/api/cart/${userId}`);
+        const cartItems = await response.json();
+
+        if (cartItems.length === 0) {
+            summaryContainer.innerHTML = '<p>Your cart is empty. Add items before checking out!</p>';
+            return;
+        }
+
+        let total = 0;
+        let html = '<h3>Order Summary</h3><ul style="list-style: none; padding: 0;">';
+        
+        cartItems.forEach(item => {
+            const itemTotal = item.price * item.quantity;
+            total += itemTotal;
+            html += `<li style="padding: 8px 0; border-bottom: 1px solid #eee;">${item.name} (x${item.quantity}) - ₹${itemTotal.toFixed(2)}</li>`;
+        });
+
+        html += `</ul><h3 style="margin-top: 10px;">Total Amount: ₹${total.toFixed(2)}</h3>`;
+        summaryContainer.innerHTML = html;
+        summaryContainer.dataset.total = total;
+    } catch (err) {
+        console.error('Error loading checkout summary:', err);
+    }
+}
+
+// Handle Checkout Form Submission
+async function handleCheckout(event) {
+    event.preventDefault();
+    const userId = localStorage.getItem('userId') || 1;
+    const summaryContainer = document.getElementById('checkout-summary');
+    const totalAmount = parseFloat(summaryContainer.dataset.total || 0);
+
+    if (totalAmount <= 0) {
+        showCutePopup('⚠️ Your cart is empty!');
+        return;
+    }
+
+    try {
+        // First fetch current cart items to pass to order items
+        const cartResponse = await fetch(`/api/cart/${userId}`);
+        const cartItems = await cartResponse.json();
+
+        const response = await fetch('/api/checkout', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                buyer_id: userId,
+                total_amount: totalAmount,
+                items: cartItems.map(i => ({ product_id: i.product_id, quantity: i.quantity, price: i.price }))
+            })
+        });
+
+        if (response.ok) {
+            showCutePopup('🎉 Order placed successfully!');
+            setTimeout(() => {
+                window.location.href = 'orders.html';
+            }, 1500);
+        } else {
+            showCutePopup('⚠️ Checkout failed.');
+        }
+    } catch (err) {
+        console.error('Checkout error:', err);
+        showCutePopup('⚠️ Server error during checkout.');
+    }
+}
+
+// Load User Orders on orders.html
+async function loadUserOrders() {
+    const userId = localStorage.getItem('userId') || 1;
+    const container = document.getElementById('orders-container');
+    if (!container) return;
+
+    try {
+        const response = await fetch(`/api/orders/${userId}`);
+        const orders = await response.json();
+
+        container.innerHTML = '';
+
+        if (orders.length === 0) {
+            container.innerHTML = '<p>You have no past orders yet 📦</p>';
+            return;
+        }
+
+        orders.forEach(order => {
+            container.innerHTML += `
+                <div style="background: white; padding: 15px; margin-bottom: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                    <h4>Order ID #${order.id}</h4>
+                    <p>Status: <strong>${order.status}</strong></p>
+                    <p>Total: ₹${order.total_amount.toFixed(2)}</p>
+                    <p style="font-size: 0.85rem; color: #666;">Placed on: ${order.created_at}</p>
+                </div>
+            `;
+        });
+    } catch (err) {
+        console.error('Error loading orders:', err);
+    }
+}
