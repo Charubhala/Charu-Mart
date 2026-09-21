@@ -74,6 +74,25 @@ function createTables() {
         if (err) console.error("Error creating order_items table", err.message);
         else console.log("Order items table ready.");
     });
+
+    db.run(`CREATE TABLE IF NOT EXISTS cart (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER,
+        product_id INTEGER,
+        quantity INTEGER DEFAULT 1
+    )`, (err) => {
+        if (err) console.error("Error creating cart table", err.message);
+        else console.log("Cart table ready.");
+    });
+
+    db.run(`CREATE TABLE IF NOT EXISTS wishlist (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER,
+        product_id INTEGER
+    )`, (err) => {
+        if (err) console.error("Error creating wishlist table", err.message);
+        else console.log("Wishlist table ready.");
+    });
 }
 
 // 1. REGISTER ROUTE
@@ -99,7 +118,7 @@ app.post('/api/login', (req, res) => {
             return res.status(500).json({ error: "Internal server error" });
         }
         if (row) {
-            res.json({ message: "Login successful!", role: row.role, username: row.username });
+            res.json({ message: "Login successful!", role: row.role, username: row.username, userId: row.id });
         } else {
             res.status(401).json({ error: "Invalid username or password" });
         }
@@ -164,6 +183,9 @@ app.post('/api/checkout', (req, res) => {
             });
             stmt.finalize();
 
+            // Clear the user's cart after successful checkout
+            db.run(`DELETE FROM cart WHERE user_id = ?`, [buyer_id]);
+
             res.json({ message: "Order placed successfully!", orderId });
         }
     );
@@ -185,7 +207,83 @@ app.put('/api/orders/:id/status', (req, res) => {
     });
 });
 
-// 7. AI CHATBOT ENDPOINT (Phase 3)
+// 7. CART & WISHLIST ROUTES
+app.post('/api/cart', (req, res) => {
+    const { user_id, product_id, quantity } = req.body;
+    db.run(`INSERT INTO cart (user_id, product_id, quantity) VALUES (?, ?, ?)`, 
+        [user_id, product_id, quantity || 1], 
+        function(err) {
+            if (err) return res.status(500).json({ error: err.message });
+            res.json({ message: "Added to cart successfully", cartId: this.lastID });
+        }
+    );
+});
+
+app.get('/api/cart/:user_id', (req, res) => {
+    const query = `
+        SELECT cart.id as cart_id, cart.quantity, products.* 
+        FROM cart 
+        JOIN products ON cart.product_id = products.id 
+        WHERE cart.user_id = ?
+    `;
+    db.all(query, [req.params.user_id], (err, rows) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json(rows);
+    });
+});
+
+app.delete('/api/cart/:id', (req, res) => {
+    db.run(`DELETE FROM cart WHERE id = ?`, [req.params.id], function(err) {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json({ message: "Item removed from cart" });
+    });
+});
+
+app.post('/api/wishlist', (req, res) => {
+    const { user_id, product_id } = req.body;
+    db.run(`INSERT INTO wishlist (user_id, product_id) VALUES (?, ?)`, 
+        [user_id, product_id], 
+        function(err) {
+            if (err) return res.status(500).json({ error: err.message });
+            res.json({ message: "Added to wishlist successfully", wishlistId: this.lastID });
+        }
+    );
+});
+
+app.get('/api/wishlist/:user_id', (req, res) => {
+    const query = `
+        SELECT wishlist.id as wishlist_id, products.* 
+        FROM wishlist 
+        JOIN products ON wishlist.product_id = products.id 
+        WHERE wishlist.user_id = ?
+    `;
+    db.all(query, [req.params.user_id], (err, rows) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json(rows);
+    });
+});
+
+app.delete('/api/wishlist/:id', (req, res) => {
+    db.run(`DELETE FROM wishlist WHERE id = ?`, [req.params.id], function(err) {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json({ message: "Item removed from wishlist" });
+    });
+});
+
+app.get('/api/order-details/:order_id', (req, res) => {
+    const query = `
+        SELECT order_items.*, products.name, products.price 
+        FROM order_items 
+        JOIN products ON order_items.product_id = products.id 
+        WHERE order_items.order_id = ?
+    `;
+    db.all(query, [req.params.order_id], (err, rows) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json(rows);
+    });
+});
+
+// 8. AI CHATBOT ENDPOINT
 app.post('/api/chat', (req, res) => {
     const { message } = req.body;
     

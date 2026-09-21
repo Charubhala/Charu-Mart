@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Charu Mart - Checkout</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="navbar">
+        <h1>📦 Charu Mart Checkout</h1>
+        <nav>
+            <a href="cart.html">Back to Cart</a>
+            <a href="home.html">Home</a>
+        </nav>
+    </header>
+
+    <main class="container" style="padding: 20px;">
+        <h2>Order Checkout</h2>
+        <div id="checkout-summary" style="margin-bottom: 20px;">
+            <!-- Cart items summary will load here -->
+        </div>
+        
+        <form id="checkout-form" onsubmit="handleCheckout(event)">
+            <h3>Shipping Details</h3>
+            <div style="margin-bottom: 10px;">
+                <label>Full Name:</label><br>
+                <input type="text" id="shipping-name" required style="width: 100%; padding: 8px;">
+            </div>
+            <div style="margin-bottom: 10px;">
+                <label>Delivery Address:</label><br>
+                <textarea id="shipping-address" required style="width: 100%; padding: 8px;"></textarea>
+            </div>
+            <div style="margin-bottom: 10px;">
+                <label>Payment Method:</label><br>
+                <select id="payment-method" style="width: 100%; padding: 8px;">
+                    <option value="cod">Cash on Delivery (Mock)</option>
+                    <option value="upi">UPI / Online Payment (Mock)</option>
+                </select>
+            </div>
+            <button type="submit" class="add-cart-btn" style="padding: 10px 20px; cursor: pointer;">Place Order (₹)</button>
+        </form>
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            loadCheckoutSummary();
+        });
+    </script>
+</body>
+</html>

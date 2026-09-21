@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Charu Mart - My Orders</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="navbar">
+        <h1>📦 Charu Mart - My Orders</h1>
+        <nav>
+            <a href="home.html">Home</a>
+            <a href="cart.html">Cart</a>
+        </nav>
+    </header>
+
+    <main class="container" style="padding: 20px;">
+        <h2>Your Order History</h2>
+        <div id="orders-container">
+            <p>Loading your orders...</p>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            loadUserOrders();
+        });
+    </script>
+</body>
+</html>
