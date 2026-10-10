@@ -1,145 +1,341 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Storefront | Charu Mart</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home | Charu Mart</title>
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-  <!-- Top Navbar -->
-  <nav class="navbar">
-    <a href="home.html" class="nav-brand"><span>✨</span> Charu Mart</a>
-
-    <div class="nav-search">
-      <span class="search-icon-btn">🔍</span>
-      <input type="text" id="searchInput" placeholder="Search cozy handmade crafts, items & electronics...">
+<header class="shop-header">
+    <div class="shop-logo">
+        <span class="shop-logo-mark">C</span>
+        <span>Charu Mart</span>
     </div>
 
-    <ul class="nav-links">
-      <li><a href="home.html">🏠 Home</a></li>
-      <li><a href="#categories">📁 Categories</a></li>
-      <li><a href="#" id="wishlistNavLink">❤️ Wishlist <span class="badge-count" id="wishlistCount">0</span></a></li>
-      <li><a href="#" id="cartNavLink">🛒 Cart <span class="badge-count" id="cartCount">0</span></a></li>
-      <li><a href="index.html">👤 Switch Role</a></li>
-    </ul>
-  </nav>
+    <nav class="shop-nav">
+        <a href="home.html" class="active">Home</a>
+        <a href="#categories">Categories</a>
+        <a href="#featured">Products</a>
+        <a href="#offers">Offers</a>
+    </nav>
 
-  <div class="home-container">
-    
-    <!-- Hero Banner -->
-    <section class="store-hero">
-      <div class="hero-text-content">
-        <span class="hero-tag">✨ Spring Collection 2026</span>
-        <h1>Handcrafted Wonders directly to your doorstep</h1>
-        <p>Explore magical items carefully created by top artisans and verified marketplace sellers.</p>
-        <a href="#products" class="btn-ghibli">Shop Now 🛍️</a>
-      </div>
-      <div class="hero-art">🏡🌱</div>
+    <div class="shop-actions">
+        <button onclick="showDemoMessage('Search')">🔍</button>
+        <button onclick="window.location.href='wishlist.html'" title="My Wishlist">♥</button>
+        <button onclick="window.location.href='cart.html'">🛒</button>
+        <button onclick="window.location.href='orders.html'" title="My Orders">📦</button>
+        <button onclick="showDemoMessage('Profile')">👤</button>
+    </div>
+</header>
+
+<main>
+    <section class="shop-hero">
+        <div class="hero-content">
+            <p class="eyebrow">WELCOME TO CHARU MART</p>
+            <h1>
+                Find something
+                <span>worth bringing home.</span>
+            </h1>
+            <p>
+                Explore carefully selected products across fashion, electronics, home essentials, beauty and more.
+            </p>
+            <button class="shop-now-button" onclick="scrollToProducts()">
+                Shop Now →
+            </button>
+        </div>
+
+        <div class="hero-visual">
+            <div class="hero-circle"></div>
+            <div class="hero-product-card">
+                <span>✦</span>
+                <strong>Fresh Finds</strong>
+                <small>New collections are here</small>
+            </div>
+            <div class="floating-tag">
+                New Arrivals
+            </div>
+        </div>
     </section>
 
-    <!-- Categories Section -->
-    <section id="categories">
-      <h2 class="section-title">✨ Explore Categories</h2>
-      <div class="categories-grid">
-        <div class="category-card" onclick="filterCategory('all')">
-          <div class="category-icon">🌟</div>
-          <div class="category-name">All Items</div>
+    <section class="shop-section" id="categories">
+        <div class="section-heading">
+            <div>
+                <p class="eyebrow">EXPLORE</p>
+                <h2>Shop by category</h2>
+            </div>
+            <p>Find what you need faster.</p>
         </div>
-        <div class="category-card" onclick="filterCategory('fashion')">
-          <div class="category-icon">👗</div>
-          <div class="category-name">Fashion</div>
+
+        <div class="category-grid">
+            <button class="category-card">
+                <span>👗</span>
+                <strong>Fashion</strong>
+                <small>Style & clothing</small>
+            </button>
+            <button class="category-card">
+                <span>💻</span>
+                <strong>Electronics</strong>
+                <small>Tech essentials</small>
+            </button>
+            <button class="category-card">
+                <span>🏠</span>
+                <strong>Home</strong>
+                <small>Make it yours</small>
+            </button>
+            <button class="category-card">
+                <span>✨</span>
+                <strong>Beauty</strong>
+                <small>Everyday care</small>
+            </button>
+            <button class="category-card">
+                <span>👜</span>
+                <strong>Accessories</strong>
+                <small>Complete your look</small>
+            </button>
+            <button class="category-card">
+                <span>⚽</span>
+                <strong>Sports</strong>
+                <small>Move & play</small>
+            </button>
         </div>
-        <div class="category-card" onclick="filterCategory('electronics')">
-          <div class="category-icon">🎧</div>
-          <div class="category-name">Electronics</div>
-        </div>
-        <div class="category-card" onclick="filterCategory('home')">
-          <div class="category-icon">🪴</div>
-          <div class="category-name">Home & Living</div>
-        </div>
-        <div class="category-card" onclick="filterCategory('beauty')">
-          <div class="category-icon">✨</div>
-          <div class="category-name">Beauty</div>
-        </div>
-        <div class="category-card" onclick="filterCategory('sports')">
-          <div class="category-icon">⚽</div>
-          <div class="category-name">Sports</div>
-        </div>
-      </div>
     </section>
 
-    <!-- Products Showcase Section -->
-    <section id="products">
-      <h2 class="section-title">🌿 Featured Discoveries</h2>
-      <div class="products-grid" id="productsGrid">
-        
-        <!-- Product Card 1 -->
-        <div class="product-card" data-category="home">
-          <span class="product-badge">Best Seller</span>
-          <button class="wishlist-btn" onclick="toggleWishlist(this, 'Handcrafted Terrarium Pot')">🤍</button>
-          <div class="product-img-box">🪴</div>
-          <h3 class="product-title">Handcrafted Terrarium Pot</h3>
-          <p class="product-desc">Miniature ecosystem in a vintage glass pot.</p>
-          <div class="product-rating">★ 4.9 (128 reviews)</div>
-          <div class="product-footer">
-            <span class="product-price">$24.99</span>
-            <button class="add-cart-btn" onclick="addToCart('Handcrafted Terrarium Pot')">+ Add to Cart</button>
-          </div>
+    <section class="shop-section" id="featured">
+        <div class="section-heading">
+            <div>
+                <p class="eyebrow">CURATED FOR YOU</p>
+                <h2>Featured products</h2>
+            </div>
+            <button class="view-button" onclick="showDemoMessage('All Products')">
+                View all →
+            </button>
         </div>
 
-        <!-- Product Card 2 -->
-        <div class="product-card" data-category="electronics">
-          <span class="product-badge">New</span>
-          <button class="wishlist-btn" onclick="toggleWishlist(this, 'Retro Wooden Speaker')">🤍</button>
-          <div class="product-img-box">📻</div>
-          <h3 class="product-title">Retro Wooden Speaker</h3>
-          <p class="product-desc">Wireless acoustic speaker with warm bass tones.</p>
-          <div class="product-rating">★ 4.8 (85 reviews)</div>
-          <div class="product-footer">
-            <span class="product-price">$59.00</span>
-            <button class="add-cart-btn" onclick="addToCart('Retro Wooden Speaker')">+ Add to Cart</button>
-          </div>
+        <div class="product-grid" id="productGrid">
+            <p>Loading products...</p>
         </div>
-
-        <!-- Product Card 3 -->
-        <div class="product-card" data-category="fashion">
-          <span class="product-badge">Popular</span>
-          <button class="wishlist-btn" onclick="toggleWishlist(this, 'Ghibli Floral Totebag')">🤍</button>
-          <div class="product-img-box">👜</div>
-          <h3 class="product-title">Ghibli Floral Totebag</h3>
-          <p class="product-desc">Organic canvas tote with embroidered leaf motifs.</p>
-          <div class="product-rating">★ 5.0 (210 reviews)</div>
-          <div class="product-footer">
-            <span class="product-price">$18.50</span>
-            <button class="add-cart-btn" onclick="addToCart('Ghibli Floral Totebag')">+ Add to Cart</button>
-          </div>
-        </div>
-
-        <!-- Product Card 4 -->
-        <div class="product-card" data-category="beauty">
-          <span class="product-badge">Organic</span>
-          <button class="wishlist-btn" onclick="toggleWishlist(this, 'Botanical Essential Oils')">🤍</button>
-          <div class="product-img-box">🧪</div>
-          <h3 class="product-title">Botanical Essential Oils</h3>
-          <p class="product-desc">Pure lavender & eucalyptus extract set.</p>
-          <div class="product-rating">★ 4.7 (92 reviews)</div>
-          <div class="product-footer">
-            <span class="product-price">$15.00</span>
-            <button class="add-cart-btn" onclick="addToCart('Botanical Essential Oils')">+ Add to Cart</button>
-          </div>
-        </div>
-
-      </div>
     </section>
 
-  </div>
+    <section class="offer-section" id="offers">
+        <div>
+            <p class="eyebrow">LIMITED TIME</p>
+            <h2>
+                A little more value,
+                <span>a lot more to explore.</span>
+            </h2>
+            <p>
+                Discover selected products and special offers available on Charu Mart.
+            </p>
+            <button onclick="scrollToProducts()">
+                Explore Offers →
+            </button>
+        </div>
+        <div class="offer-symbol">%</div>
+    </section>
+</main>
 
-  <footer>
-    <p>🌱 Charu Mart Marketplace • 2026 Student Project</p>
-  </footer>
+<footer class="shop-footer">
+    <div>
+        <strong>Charu Mart</strong>
+        <p>Your marketplace, your choice.</p>
+    </div>
+    <div>
+        <p>Shop • Discover • Enjoy</p>
+        <p>© 2026 Charu Mart</p>
+    </div>
+</footer>
 
-  <script src="script.js"></script>
+<script>
+function getUserId() {
+    let user = null;
+    try {
+        user = JSON.parse(localStorage.getItem("user"));
+    } catch (error) {
+        user = null;
+    }
+
+    if (user && (user.user_id || user.id)) {
+        return Number(user.user_id || user.id);
+    }
+
+    const storedId = localStorage.getItem("user_id");
+    if (storedId) {
+        return Number(storedId);
+    }
+
+    return null;
+}
+
+function getProductImageUrl(image) {
+    if (!image || image.trim() === "") {
+        return "https://via.placeholder.com/300x200?text=Charu+Mart";
+    }
+    image = String(image).trim();
+    if (image.startsWith("http://") || image.startsWith("https://")) {
+        return image;
+    }
+    return "http://localhost:5000/images/" + encodeURIComponent(image);
+}
+
+async function loadProducts() {
+    const productGrid = document.getElementById("productGrid");
+
+    try {
+        const response = await fetch("http://localhost:5000/api/products");
+        const products = await response.json();
+
+        if (!response.ok) {
+            throw new Error("Failed to load products");
+        }
+
+        productGrid.innerHTML = "";
+
+        if (products.length === 0) {
+            productGrid.innerHTML = `<p>No products available.</p>`;
+            return;
+        }
+
+        products.forEach(product => {
+            const card = document.createElement("article");
+            card.className = "product-card";
+
+            const imageUrl = getProductImageUrl(product.image);
+
+            card.innerHTML = `
+                <div class="product-image" style="position: relative; width: 100%; height: 200px; background: #f8fafc; border-radius: 8px; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                    <img
+                        src="${imageUrl}"
+                        alt="${product.name}"
+                        style="width: 100%; height: 100%; object-fit: contain;"
+                        onerror="this.src='https://via.placeholder.com/300x200?text=Charu+Mart'"
+                    >
+                    <button
+                        onclick="addToWishlist(${product.product_id})"
+                        style="position: absolute; top: 10px; right: 10px; background: #ffffff; color: #dc2626; border: 2px solid #cbd5e1; border-radius: 50%; width: 36px; height: 36px; font-size: 18px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); z-index: 10;"
+                        title="Add to Wishlist">
+                        ♥
+                    </button>
+                </div>
+
+                <div class="product-info">
+                    <p>${product.category}</p>
+                    <h3>${product.name}</h3>
+                    <span class="product-description">
+                        Available in Charu Mart
+                    </span>
+
+                    <div class="product-bottom">
+                        <strong>₹${Number(product.price).toFixed(2)}</strong>
+                        <span class="rating">
+                            Stock: ${product.stock}
+                        </span>
+                    </div>
+
+                    <button
+                        class="cart-button"
+                        onclick="addToCart(${product.product_id})">
+                        Add to Cart
+                    </button>
+                </div>
+            `;
+
+            productGrid.appendChild(card);
+        });
+
+    } catch (error) {
+        console.error("Product loading error:", error);
+        productGrid.innerHTML = `
+            <p>
+                Unable to load products.
+                Please try again.
+            </p>
+        `;
+    }
+}
+
+async function addToWishlist(productId) {
+    const userId = getUserId();
+
+    if (!userId) {
+        alert("Please login first.");
+        window.location.href = "login.html";
+        return;
+    }
+
+    try {
+        const response = await fetch("http://localhost:5000/api/wishlist", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                user_id: userId,
+                product_id: productId
+            })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            alert(data.message || "Could not add to wishlist.");
+            return;
+        }
+
+        alert("Product added to wishlist successfully!");
+
+    } catch (error) {
+        console.error("Wishlist Error:", error);
+        alert("Server connection failed.");
+    }
+}
+
+async function addToCart(productId) {
+    const userId = getUserId();
+
+    if (!userId) {
+        alert("Please login before adding products to cart.");
+        window.location.href = "login.html";
+        return;
+    }
+
+    try {
+        const response = await fetch(
+            "http://localhost:5000/api/cart",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    user_id: Number(userId),
+                    product_id: productId,
+                    quantity: 1
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            alert(data.message || "Unable to add product to cart.");
+            return;
+        }
+
+        alert("Product added to cart successfully!");
+
+    } catch (error) {
+        console.error("Cart Error:", error);
+        alert("Server connection failed.");
+    }
+}
+
+loadProducts();
+</script>
+
 </body>
+
 </html>

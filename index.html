@@ -1,127 +1,180 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Charu Mart | Magical Marketplace</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Charu Mart</title>
+
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-  <!-- Floating Background Clouds -->
-  <div class="bg-cloud cloud-1"></div>
-  <div class="bg-cloud cloud-2"></div>
-  <div class="bg-cloud cloud-3"></div>
+    <!-- Header -->
+    <header class="top-bar">
 
-  <div class="hero-container">
-    
-    <!-- Brand Header -->
-    <header class="brand-header">
-      <h1 class="brand-logo"><span class="sparkle">✨</span> Charu Mart <span class="sparkle">🌿</span></h1>
-      <p class="tagline">A Wholesome & Premium Online Marketplace</p>
+        <div class="logo">
+            <span class="logo-mark">C</span>
+            <span>Charu Mart</span>
+        </div>
+
+        <div class="top-label">
+            Shop • Sell • Grow
+        </div>
+
     </header>
 
-    <!-- Welcome Banner Card -->
-    <div class="welcome-card">
-      <h2>Welcome to the Marketplace ✨</h2>
-      <p>Discover crafted treasures, manage your artisanal store, or oversee the marketplace ecosystem. Select your portal below to begin!</p>
-    </div>
 
-    <!-- Role Selection Cards -->
-    <div class="roles-grid">
-      
-      <!-- Buyer Portal Card -->
-      <div class="role-card" data-role="buyer">
-        <div class="role-icon">🛍️</div>
-        <h3 class="role-title">Buyer Portal</h3>
-        <p class="role-desc">Browse cute curated items, add products to your wishlist, and enjoy seamless shopping.</p>
-        <a href="login.html" class="btn-ghibli">Enter as Buyer ✨</a>
-      </div>
+    <!-- Main Content -->
+    <main class="landing-container">
 
-      <!-- Seller Portal Card -->
-      <div class="role-card" data-role="seller">
-        <div class="role-icon">🏡</div>
-        <h3 class="role-title">Seller Hub</h3>
-        <p class="role-desc">Manage your storefront, list handcrafted goods, and keep track of incoming orders.</p>
-        <a href="seller-login.html" class="btn-ghibli btn-gold">Enter as Seller 🌾</a>
-      </div>
+        <!-- Welcome Section -->
+        <section class="welcome-section">
 
-      <!-- Admin Portal Card -->
-      <div class="role-card" data-role="admin">
-        <div class="role-icon">👑</div>
-        <h3 class="role-title">Admin Suite</h3>
-        <p class="role-desc">Monitor overall platform statistics, user accounts, store approvals, and reports.</p>
-        <a href="admin-login.html" class="btn-ghibli btn-peach">Enter as Admin 📜</a>
-      </div>
+            <p class="eyebrow">
+                WELCOME TO CHARU MART
+            </p>
 
-    </div>
+            <h1>
+                One marketplace.
+                <br>
+                <span>Endless possibilities.</span>
+            </h1>
 
-  </div>
+            <p class="welcome-text">
+                Shop your favourite products, build your online business,
+                or manage the marketplace — everything starts here.
+            </p>
 
-  <!-- Footer -->
-  <footer>
-    <p>🌱 Crafted with care for Charu Mart • Ghibli-inspired Capstone Project 2026</p>
-  </footer>
+        </section>
 
-  <!-- Floating AI Chatbot Widget -->
-  <div id="chat-widget" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000; font-family: Arial, sans-serif;">
-      <!-- Chat Toggle Button -->
-      <button id="chat-toggle-btn" onclick="toggleChat()" style="background: #2563eb; color: white; border: none; padding: 12px 18px; border-radius: 50px; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1); font-weight: bold;">💬 Chat with AI</button>
 
-      <!-- Chat Box Window (Hidden by default) -->
-      <div id="chat-box" style="display: none; width: 300px; height: 400px; background: white; border: 1px solid #ccc; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); flex-direction: column; overflow: hidden; margin-bottom: 10px;">
-          <div style="background: #2563eb; color: white; padding: 10px; display: flex; justify-content: space-between; align-items: center; font-weight: bold;">
-              <span>Charu Mart AI Assistant</span>
-              <button onclick="toggleChat()" style="background: none; border: none; color: white; cursor: pointer; font-size: 16px;">&times;</button>
-          </div>
-          <div id="chat-messages" style="flex: 1; padding: 10px; overflow-y: auto; font-size: 14px; background: #f9fafb;">
-              <div style="margin-bottom: 8px; color: #374151;"><b>AI:</b> Hello! Welcome to Charu Mart. How can I help you today?</div>
-          </div>
-          <div style="padding: 10px; border-top: 1px solid #e5e7eb; display: flex;">
-              <input type="text" id="chat-input" placeholder="Type a message..." style="flex: 1; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px; outline: none;" onkeypress="handleChatKey(event)">
-              <button onclick="sendChatMessage()" style="background: #2563eb; color: white; border: none; padding: 8px 12px; margin-left: 5px; border-radius: 4px; cursor: pointer;">Send</button>
-          </div>
-      </div>
-  </div>
+        <!-- Role Selection -->
+        <section class="role-section">
 
-  <script>
-  function toggleChat() {
-      const box = document.getElementById('chat-box');
-      box.style.display = box.style.display === 'flex' ? 'none' : 'flex';
-  }
+            <!-- Buyer -->
+            <article class="role-card buyer-card">
 
-  function handleChatKey(event) {
-      if (event.key === 'Enter') sendChatMessage();
-  }
+                <div class="role-icon">
+                    🛍️
+                </div>
 
-  async function sendChatMessage() {
-      const input = document.getElementById('chat-input');
-      const messages = document.getElementById('chat-messages');
-      const text = input.value.trim();
-      if (!text) return;
+                <p class="role-label">
+                    SHOP & DISCOVER
+                </p>
 
-      // Append user message
-      messages.innerHTML += `<div style="margin-bottom: 8px; text-align: right; color: #2563eb;"><b>You:</b> ${text}</div>`;
-      input.value = '';
-      messages.scrollTop = messages.scrollHeight;
+                <h2>
+                    Buyer
+                </h2>
 
-      try {
-          const res = await fetch('/api/chat', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ message: text })
-          });
-          const data = await res.json();
-          
-          // Append AI response
-          messages.innerHTML += `<div style="margin-bottom: 8px; color: #374151;"><b>AI:</b> ${data.reply}</div>`;
-          messages.scrollTop = messages.scrollHeight;
-      } catch (err) {
-          messages.innerHTML += `<div style="margin-bottom: 8px; color: red;"><b>System:</b> Error connecting to chatbot.</div>`;
-      }
-  }
-  </script>
+                <p>
+                    Find products you love, explore new collections,
+                    and enjoy a simple shopping experience.
+                </p>
 
-  <script src="script.js"></script>
+                <button onclick="goToPage('login.html')">
+                    Enter Marketplace →
+                </button>
+
+            </article>
+
+
+            <!-- Seller -->
+            <article class="role-card seller-card">
+
+                <div class="role-icon">
+                    🏬
+                </div>
+
+                <p class="role-label">
+                    BUILD YOUR BUSINESS
+                </p>
+
+                <h2>
+                    Seller
+                </h2>
+
+                <p>
+                    Add products, manage orders, track sales,
+                    and grow your business with ease.
+                </p>
+
+                <button onclick="goToPage('seller-login.html')">
+                    Open Seller Space →
+                </button>
+
+            </article>
+
+
+            <!-- Admin -->
+            <article class="role-card admin-card">
+
+                <div class="role-icon">
+                    📊
+                </div>
+
+                <p class="role-label">
+                    MANAGE THE PLATFORM
+                </p>
+
+                <h2>
+                    Admin
+                </h2>
+
+                <p>
+                    Manage users, sellers, products and orders
+                    from the central administration panel.
+                </p>
+
+                <button onclick="goToPage('admin-login.html')">
+                    Access Admin Panel →
+                </button>
+
+            </article>
+
+        </section>
+
+
+        <!-- Highlights -->
+        <section class="trust-section">
+
+            <div>
+                <strong>Easy Shopping</strong>
+                <span>Discover products effortlessly</span>
+            </div>
+
+            <div>
+                <strong>Seller Friendly</strong>
+                <span>Manage your business simply</span>
+            </div>
+
+            <div>
+                <strong>Smart Management</strong>
+                <span>Everything under one platform</span>
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- Footer -->
+    <footer>
+
+        <p>
+            © 2026 Charu Mart
+        </p>
+
+        <p>
+            Student Capstone Project
+        </p>
+
+    </footer>
+
+
+    <!-- JavaScript -->
+    <script src="script.js"></script>
+
 </body>
 </html>

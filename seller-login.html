@@ -1,68 +1,239 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Seller Hub Login | Charu Mart</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seller Login | Charu Mart</title>
+
+    <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background: #f4f6f9;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: #1e293b;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 420px;
+        }
+
+        .card {
+            background: white;
+            padding: 36px;
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+        }
+
+        h1 {
+            text-align: center;
+            color: #0f172a;
+            font-size: 26px;
+            margin-bottom: 6px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #64748b;
+            font-size: 13px;
+            margin-bottom: 24px;
+        }
+
+        form {
+            display: grid;
+            gap: 16px;
+        }
+
+        input {
+            width: 100%;
+            height: 46px;
+            padding: 0 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            background: #ffffff;
+            color: #0f172a;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        input:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            height: 46px;
+            border: none;
+            border-radius: 10px;
+            background: #2563eb;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s ease;
+        }
+
+        button[type="submit"]:hover {
+            opacity: 0.9;
+        }
+
+        #message {
+            margin-top: 15px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .register {
+            text-align: center;
+            margin-top: 20px;
+            color: #64748b;
+            font-size: 12px;
+        }
+
+        .register a {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .register a:hover {
+            text-decoration: underline;
+        }
+
+        .back {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            color: #64748b;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .back:hover {
+            color: #2563eb;
+        }
+    </style>
 </head>
+
 <body>
 
-  <!-- Floating Background Clouds -->
-  <div class="bg-cloud cloud-1"></div>
-  <div class="bg-cloud cloud-3"></div>
+<div class="container">
+    <div class="card">
+        <h1>Seller Login</h1>
+        <p class="subtitle">
+            Login to your Charu Mart seller account
+        </p>
 
-  <div class="auth-container">
-    
-    <a href="index.html" class="back-home">🌾 ← Back to Role Selection</a>
+        <form id="sellerLoginForm">
+            <input
+                type="email"
+                id="email"
+                placeholder="Email Address"
+                required
+            >
 
-    <div class="auth-card seller-border-highlight">
-      <div class="auth-header">
-        <span class="seller-badge">Artisan & Merchant Portal</span>
-        <div class="role-icon" style="margin: 0.5rem auto 1rem; background: #FFF9EE;">🏡</div>
-        <h2>Seller Hub Login</h2>
-        <p>Manage your handcrafted goods, storefront & inventory</p>
-      </div>
+            <input
+                type="password"
+                id="password"
+                placeholder="Password"
+                required
+            >
 
-      <form id="sellerLoginForm">
-        
-        <!-- Seller Email -->
-        <div class="form-group">
-          <label for="sellerEmail">Seller Email address</label>
-          <input type="email" id="sellerEmail" class="form-control" placeholder="artisan@charumart.com" required>
-        </div>
+            <button type="submit">
+                Login
+            </button>
+        </form>
 
-        <!-- Password Input -->
-        <div class="form-group">
-          <label for="sellerPassword">Password</label>
-          <div class="input-wrapper">
-            <input type="password" id="sellerPassword" class="form-control" placeholder="••••••••" required>
-            <button type="button" class="toggle-password" id="toggleSellerPasswordBtn">👁️</button>
-          </div>
-        </div>
+        <p id="message"></p>
 
-        <!-- Extra Actions -->
-        <div class="form-actions">
-          <label class="remember-me">
-            <input type="checkbox" id="sellerRemember"> Remember store session
-          </label>
-          <a href="#" class="forgot-link" style="color: var(--accent-gold);" onclick="showCutePopup('🌻 Password recovery sent to artisan email!')">Forgot password?</a>
-        </div>
+        <p class="register">
+            New seller?
+            <a href="seller_register.html">
+                Create New Account
+            </a>
+        </p>
 
-        <!-- Seller Login Button -->
-        <button type="submit" class="btn-ghibli btn-gold btn-full">Enter Seller Dashboard 🌾</button>
-      </form>
-
-      <div class="divider">
-        <span>new merchant?</span>
-      </div>
-
-      <div class="auth-footer">
-        Want to sell on Charu Mart? <a href="#" style="color: var(--accent-gold);" onclick="showCutePopup('🎨 Merchant application form opening!')">Apply for Storefront</a>
-      </div>
+        <a href="index.html" class="back">
+            ← Back to Home
+        </a>
     </div>
-  </div>
+</div>
 
-  <script src="script.js"></script>
+<script>
+document
+    .getElementById("sellerLoginForm")
+    .addEventListener("submit", async function(event) {
+        event.preventDefault();
+
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value;
+        const message = document.getElementById("message");
+
+        try {
+            const response = await fetch(
+                "http://localhost:5000/api/login",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        password: password
+                    })
+                }
+            );
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                message.style.color = "red";
+                message.textContent = data.message || "Invalid email or password.";
+                return;
+            }
+
+            if (!data.user || data.user.role !== "seller") {
+                message.style.color = "red";
+                message.textContent = "Seller account required.";
+                return;
+            }
+
+            localStorage.setItem(
+                "user",
+                JSON.stringify(data.user)
+            );
+
+            message.style.color = "green";
+            message.textContent = "Login successful!";
+
+            setTimeout(function() {
+                window.location.href = "seller.html";
+            }, 700);
+
+        } catch (error) {
+            console.error(error);
+            message.style.color = "red";
+            message.textContent = "Server error. Please try again.";
+        }
+    });
+</script>
+
 </body>
+
 </html>

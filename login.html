@@ -1,77 +1,413 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Buyer Login | Charu Mart</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Login | Charu Mart</title>
+
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-  <!-- Floating Clouds Background -->
-  <div class="bg-cloud cloud-1"></div>
-  <div class="bg-cloud cloud-2"></div>
+<header class="top-bar">
 
-  <div class="auth-container">
-    
-    <a href="index.html" class="back-home">🌱 ← Back to Role Selection</a>
-
-    <div class="auth-card">
-      <div class="auth-header">
-        <div class="role-icon" style="margin: 0 auto 1rem;">🛍️</div>
-        <h2>Welcome Back!</h2>
-        <p>Login to explore your saved items & market deals</p>
-      </div>
-
-      <form id="buyerLoginForm">
-        
-        <!-- Email/Phone Input -->
-        <div class="form-group">
-          <label for="buyerEmail">Email address or Phone</label>
-          <input type="text" id="buyerEmail" class="form-control" placeholder="buyer@example.com" required>
-        </div>
-
-        <!-- Password Input -->
-        <div class="form-group">
-          <label for="buyerPassword">Password</label>
-          <div class="input-wrapper">
-            <input type="password" id="buyerPassword" class="form-control" placeholder="••••••••" required>
-            <button type="button" class="toggle-password" id="togglePasswordBtn">👁️</button>
-          </div>
-        </div>
-
-        <!-- Extra Actions -->
-        <div class="form-actions">
-          <label class="remember-me">
-            <input type="checkbox" id="rememberMe"> Remember me
-          </label>
-          <a href="#" class="forgot-link" onclick="showCutePopup('🌸 Password reset link sent to your email!')">Forgot password?</a>
-        </div>
-
-        <!-- Login Button -->
-        <button type="submit" class="btn-ghibli btn-full">Login as Buyer ✨</button>
-      </form>
-
-      <div class="divider">
-        <span>or sign in with</span>
-      </div>
-
-      <!-- Social Logins -->
-      <div class="social-logins">
-        <button class="btn-social" onclick="showCutePopup('🌐 Google login simulation connected!')">
-          🌐 Google
-        </button>
-        <button class="btn-social" onclick="showCutePopup('🍎 Apple ID simulation connected!')">
-          🍎 Apple
-        </button>
-      </div>
-
-      <div class="auth-footer">
-        Don't have an account? <a href="#" onclick="showCutePopup('🌱 Registration page opens here!')">Sign up</a>
-      </div>
+    <div class="logo">
+        <span class="logo-mark">C</span>
+        <span>Charu Mart</span>
     </div>
-  </div>
 
-  <script src="script.js"></script>
+    <a href="index.html" class="back-link">
+        ← Back
+    </a>
+
+</header>
+
+
+<main class="login-page">
+
+    <section class="login-container">
+
+        <div class="login-intro">
+
+            <p class="eyebrow">
+                WELCOME BACK
+            </p>
+
+            <h1>
+                Your shopping
+                <span>starts here.</span>
+            </h1>
+
+            <p>
+                Sign in to explore products, manage your wishlist,
+                and continue your shopping journey at Charu Mart.
+            </p>
+
+            <div class="login-highlight">
+
+                <span>✦</span>
+
+                <div>
+                    <strong>Shop with ease</strong>
+                    <small>Discover products made for you.</small>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="login-card">
+
+            <div class="login-heading">
+
+                <h2 id="loginTitle">
+                    Login
+                </h2>
+
+                <p>
+                    Enter your details to continue.
+                </p>
+
+            </div>
+
+
+            <form id="loginForm">
+
+                <div class="form-group">
+
+                    <label for="email">
+                        Email or Phone Number
+                    </label>
+
+                    <input
+                        type="text"
+                        id="email"
+                        name="email"
+                        placeholder="Enter your email or phone"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="password">
+                        Password
+                    </label>
+
+                    <div class="password-box">
+
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            placeholder="Enter your password"
+                            required
+                        >
+
+                        <button
+                            type="button"
+                            class="show-password"
+                            onclick="togglePassword()"
+                        >
+                            Show
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div class="login-options">
+
+                    <label class="remember-me">
+
+                        <input
+                            type="checkbox"
+                            id="rememberMe"
+                        >
+
+                        <span>Remember me</span>
+
+                    </label>
+
+                    <a
+                        href="#"
+                        onclick="forgotPassword(event)"
+                    >
+                        Forgot password?
+                    </a>
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="login-button"
+                >
+                    Login to Charu Mart
+                </button>
+
+
+                <div class="divider">
+
+                    <span>
+                        or continue with
+                    </span>
+
+                </div>
+
+
+                <div class="social-buttons">
+
+                    <button
+                        type="button"
+                        class="social-button"
+                        onclick="demoSocialLogin('Google')"
+                    >
+                        <span>G</span>
+                        Google
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="social-button"
+                        onclick="demoSocialLogin('Apple')"
+                    >
+                        <span>●</span>
+                        Apple
+                    </button>
+
+                </div>
+
+
+                <p class="signup-text">
+
+                    New to Charu Mart?
+
+                    <a href="register.html">
+                        Create an account
+                    </a>
+
+                </p>
+
+            </form>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<footer>
+
+    <p>
+        © 2026 Charu Mart
+    </p>
+
+    <p>
+        Buyer / Seller Portal
+    </p>
+
+</footer>
+
+
+<script>
+
+function togglePassword() {
+
+    const password =
+        document.getElementById("password");
+
+    const button =
+        document.querySelector(".show-password");
+
+    if (password.type === "password") {
+
+        password.type = "text";
+
+        button.textContent = "Hide";
+
+    } else {
+
+        password.type = "password";
+
+        button.textContent = "Show";
+
+    }
+}
+
+
+function forgotPassword(event) {
+
+    event.preventDefault();
+
+    alert(
+        "Password reset feature will be added later."
+    );
+}
+
+
+function demoSocialLogin(type) {
+
+    alert(
+        type + " login will be added later."
+    );
+}
+
+
+document
+    .getElementById("loginForm")
+    .addEventListener("submit", async function(event) {
+
+        event.preventDefault();
+
+        const email =
+            document
+                .getElementById("email")
+                .value
+                .trim();
+
+        const password =
+            document
+                .getElementById("password")
+                .value
+                .trim();
+
+
+        if (!email || !password) {
+
+            alert(
+                "Please enter email and password."
+            );
+
+            return;
+        }
+
+
+        try {
+
+            const response =
+                await fetch(
+                    "http://localhost:5000/api/login",
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body: JSON.stringify({
+                            email: email,
+                            password: password
+                        })
+                    }
+                );
+
+
+            const data =
+                await response.json();
+
+
+            if (!response.ok) {
+
+                alert(
+                    data.message ||
+                    "Login failed."
+                );
+
+                return;
+            }
+
+
+            const user = data.user;
+
+
+            localStorage.setItem(
+                "user",
+                JSON.stringify(user)
+            );
+
+            localStorage.setItem(
+                "user_id",
+                user.user_id
+            );
+
+            localStorage.setItem(
+                "user_role",
+                user.role
+            );
+
+
+            if (user.role === "seller") {
+
+                alert(
+                    "Seller login successful!"
+                );
+
+                window.location.href =
+                    "seller.html";
+
+                return;
+            }
+
+
+            if (user.role === "buyer") {
+
+                alert(
+                    "Buyer login successful!"
+                );
+
+                window.location.href =
+                    "home.html";
+
+                return;
+            }
+
+
+            if (user.role === "admin") {
+
+                alert(
+                    "Admin login successful!"
+                );
+
+                window.location.href =
+                    "admin.html";
+
+                return;
+            }
+
+
+            alert(
+                "Invalid user role."
+            );
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "Login Error:",
+                error
+            );
+
+            alert(
+                "Server connection failed. Please make sure the backend is running."
+            );
+        }
+
+    });
+
+</script>
+
 </body>
+
 </html>

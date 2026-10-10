@@ -1,307 +1,308 @@
-const express = require('express');
-const sqlite3 = require('sqlite3').verbose();
-const path = require('path');
+const express = require("express");
+const cors = require("cors");
+const sqlite3 = require("sqlite3").verbose();
+const path = require("path");
+
 const app = express();
-const PORT = 3000;
+const PORT = 5000;
 
+app.use(cors());
 app.use(express.json());
-
-// SERVE FRONTEND: This automatically serves all HTML, CSS, and JS files from this folder!
 app.use(express.static(path.join(__dirname)));
 
-// Connect to SQLite Database
+// Connect to SQLite Database and automatically create tables & sample data
 const db = new sqlite3.Database('./charumart.db', (err) => {
     if (err) {
-        console.error('Error opening database', err.message);
+        console.error("SQLite connection error:", err.message);
     } else {
-        console.log('Connected to the SQLite database.');
-        createTables();
+        console.log("Connected to the SQLite database.");
+        
+        db.serialize(() => {
+            db.run(`CREATE TABLE IF NOT EXISTS users (
+                user_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT,
+                email TEXT UNIQUE,
+                password TEXT,
+                role TEXT
+            )`);
+
+            db.run(`CREATE TABLE IF NOT EXISTS products (
+                product_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT,
+                category TEXT,
+                price REAL,
+                stock INTEGER,
+                seller_id INTEGER,
+                image TEXT
+            )`, () => {
+                // Auto-seed sample products if the table is empty
+                db.get(`SELECT COUNT(*) as count FROM products`, (err, row) => {
+                    if (row && row.count === 0) {
+                        const sampleProducts = [
+                            ['Wireless Headphones', 'Electronics', 59.99, 10, 1, 'images/product1.jpg'],
+                            ['Smart Watch', 'Electronics', 99.99, 15, 1, 'images/product2.jpg'],
+                            ['Running Shoes', 'Sports', 45.50, 20, 1, 'images/product3.jpg'],
+                            ['Cotton T-Shirt', 'Fashion', 19.99, 50, 1, 'images/product4.jpg']
+                        ];
+                        const stmt = db.prepare(`INSERT INTO products (name, category, price, stock, seller_id, image) VALUES (?, ?, ?, ?, ?, ?)`);
+                        sampleProducts.forEach(p => stmt.run(p));
+                        stmt.finalize();
+                        console.log("Sample products seeded successfully.");
+                    }
+                });
+            });
+
+            db.run(`CREATE TABLE IF NOT EXISTS cart (
+                cart_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER,
+                product_id INTEGER,
+                quantity INTEGER
+            )`);
+
+            db.run(`CREATE TABLE IF NOT EXISTS wishlist (
+                wishlist_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER,
+                product_id INTEGER,
+                UNIQUE(user_id, product_id)
+            )`);
+
+            db.run(`CREATE TABLE IF NOT EXISTS orders (
+                order_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER,
+                total_amount REAL,
+                address TEXT,
+                payment_method TEXT,
+                payment_status TEXT,
+                order_status TEXT
+            )`);
+            console.log("Database tables verified/created successfully.");
+        });
     }
 });
 
-// Function to create all required tables
-function createTables() {
-    db.run(`CREATE TABLE IF NOT EXISTS users (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        username TEXT UNIQUE,
-        password TEXT,
-        role TEXT
-    )`, (err) => {
-        if (err) console.error("Error creating users table", err.message);
-        else console.log("Users table ready.");
-    });
+// Root Route
+app.get("/", (req, res) => {
+    res.send("Charu Mart Backend is running with SQLite!");
+});
 
-    db.run(`CREATE TABLE IF NOT EXISTS products (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT,
-        price REAL,
-        seller TEXT
-    )`, (err) => {
-        if (err) console.error("Error creating products table", err.message);
-        else console.log("Products table ready.");
-    });
-
-    db.run(`CREATE TABLE IF NOT EXISTS reviews (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        product_id INTEGER,
-        username TEXT,
-        rating INTEGER,
-        comment TEXT,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-    )`, (err) => {
-        if (err) console.error("Error creating reviews table", err.message);
-        else console.log("Reviews table ready.");
-    });
-
-    db.run(`CREATE TABLE IF NOT EXISTS orders (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        buyer_id INTEGER,
-        total_amount REAL,
-        status TEXT DEFAULT 'PENDING',
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-    )`, (err) => {
-        if (err) console.error("Error creating orders table", err.message);
-        else console.log("Orders table ready.");
-    });
-
-    db.run(`CREATE TABLE IF NOT EXISTS order_items (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        order_id INTEGER,
-        product_id INTEGER,
-        quantity INTEGER,
-        unit_price REAL
-    )`, (err) => {
-        if (err) console.error("Error creating order_items table", err.message);
-        else console.log("Order items table ready.");
-    });
-
-    db.run(`CREATE TABLE IF NOT EXISTS cart (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        user_id INTEGER,
-        product_id INTEGER,
-        quantity INTEGER DEFAULT 1
-    )`, (err) => {
-        if (err) console.error("Error creating cart table", err.message);
-        else console.log("Cart table ready.");
-    });
-
-    db.run(`CREATE TABLE IF NOT EXISTS wishlist (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        user_id INTEGER,
-        product_id INTEGER
-    )`, (err) => {
-        if (err) console.error("Error creating wishlist table", err.message);
-        else console.log("Wishlist table ready.");
-    });
-}
-
-// 1. REGISTER ROUTE
-app.post('/api/register', (req, res) => {
-    const { username, password, role } = req.body;
-    const query = `INSERT INTO users (username, password, role) VALUES (?, ?, ?)`;
-    
-    db.run(query, [username, password, role], function(err) {
+// Register API
+app.post("/api/register", (req, res) => {
+    const { name, email, password, role } = req.body;
+    const query = `INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)`;
+    db.run(query, [name, email, password, role || 'buyer'], function(err) {
         if (err) {
-            return res.status(400).json({ error: "Username already exists or invalid data!" });
+            console.error("REGISTER SQL ERROR:", err.message);
+            return res.status(500).json({ message: "Email already exists or database error" });
         }
-        res.json({ message: "User registered successfully!", userId: this.lastID });
+        res.json({ message: "Account created successfully", user_id: this.lastID });
     });
 });
 
-// 2. LOGIN ROUTE
-app.post('/api/login', (req, res) => {
-    const { username, password } = req.body;
-    const query = `SELECT * FROM users WHERE username = ? AND password = ?`;
-
-    db.get(query, [username, password], (err, row) => {
+// Login API
+app.post("/api/login", (req, res) => {
+    const { email, password } = req.body;
+    const query = `SELECT * FROM users WHERE email = ? AND password = ?`;
+    db.get(query, [email, password], (err, row) => {
         if (err) {
-            return res.status(500).json({ error: "Internal server error" });
+            console.error("LOGIN SQL ERROR:", err.message);
+            return res.status(500).json({ message: "Database error: " + err.message });
         }
-        if (row) {
-            res.json({ message: "Login successful!", role: row.role, username: row.username, userId: row.id });
-        } else {
-            res.status(401).json({ error: "Invalid username or password" });
+        if (!row) {
+            return res.status(401).json({ message: "Invalid email or password" });
         }
+        res.json({ user: row });
     });
 });
 
-// 3. GET ALL PRODUCTS ROUTE
-app.get('/api/products', (req, res) => {
+// Products API
+app.get("/api/products", (req, res) => {
     db.all(`SELECT * FROM products`, [], (err, rows) => {
         if (err) {
-            return res.status(500).json({ error: err.message });
+            return res.status(500).json({ message: "Database error" });
         }
         res.json(rows);
     });
 });
 
-// 4. ADD PRODUCT ROUTE (For Sellers)
-app.post('/api/products', (req, res) => {
-    const { name, price, seller } = req.body;
-    const query = `INSERT INTO products (name, price, seller) VALUES (?, ?, ?)`;
-
-    db.run(query, [name, price, seller], function(err) {
+// Add Product API
+app.post("/api/products", (req, res) => {
+    const { name, category, price, stock, seller_id, image } = req.body;
+    const query = `INSERT INTO products (name, category, price, stock, seller_id, image) VALUES (?, ?, ?, ?, ?, ?)`;
+    db.run(query, [name, category, price, stock, seller_id, image || ''], function(err) {
         if (err) {
-            return res.status(400).json({ error: err.message });
+            return res.status(500).json({ message: "Failed to add product" });
         }
-        res.json({ message: "Product added successfully!", productId: this.lastID });
+        res.json({ message: "Product added successfully", product_id: this.lastID });
     });
 });
 
-// 5. REVIEW ROUTES
-app.post('/api/reviews', (req, res) => {
-    const { product_id, username, rating, comment } = req.body;
-    db.run(`INSERT INTO reviews (product_id, username, rating, comment) VALUES (?, ?, ?, ?)`,
-        [product_id, username, rating, comment],
-        function(err) {
-            if (err) return res.status(500).json({ error: err.message });
-            res.json({ message: "Review added successfully", reviewId: this.lastID });
-        }
-    );
-});
-
-app.get('/api/reviews/:product_id', (req, res) => {
-    db.all(`SELECT * FROM reviews WHERE product_id = ?`, [req.params.product_id], (err, rows) => {
-        if (err) return res.status(500).json({ error: err.message });
-        res.json(rows);
-    });
-});
-
-// 6. CHECKOUT & ORDER ROUTES
-app.post('/api/checkout', (req, res) => {
-    const { buyer_id, total_amount, items } = req.body;
-    
-    db.run(`INSERT INTO orders (buyer_id, total_amount, status) VALUES (?, ?, 'PENDING')`, 
-        [buyer_id, total_amount], 
-        function(err) {
-            if (err) return res.status(500).json({ error: err.message });
-            const orderId = this.lastID;
-            
-            const stmt = db.prepare(`INSERT INTO order_items (order_id, product_id, quantity, unit_price) VALUES (?, ?, ?, ?)`);
-            items.forEach(item => {
-                stmt.run(orderId, item.product_id, item.quantity, item.price);
-            });
-            stmt.finalize();
-
-            // Clear the user's cart after successful checkout
-            db.run(`DELETE FROM cart WHERE user_id = ?`, [buyer_id]);
-
-            res.json({ message: "Order placed successfully!", orderId });
-        }
-    );
-});
-
-app.get('/api/orders/:buyer_id', (req, res) => {
-    const buyerId = req.params.buyer_id;
-    db.all(`SELECT * FROM orders WHERE buyer_id = ? ORDER BY created_at DESC`, [buyerId], (err, rows) => {
-        if (err) return res.status(500).json({ error: err.message });
-        res.json(rows);
-    });
-});
-
-app.put('/api/orders/:id/status', (req, res) => {
-    const { status } = req.body;
-    db.run(`UPDATE orders SET status = ? WHERE id = ?`, [status, req.params.id], function(err) {
-        if (err) return res.status(500).json({ error: err.message });
-        res.json({ message: "Order status updated successfully" });
-    });
-});
-
-// 7. CART & WISHLIST ROUTES
-app.post('/api/cart', (req, res) => {
-    const { user_id, product_id, quantity } = req.body;
-    db.run(`INSERT INTO cart (user_id, product_id, quantity) VALUES (?, ?, ?)`, 
-        [user_id, product_id, quantity || 1], 
-        function(err) {
-            if (err) return res.status(500).json({ error: err.message });
-            res.json({ message: "Added to cart successfully", cartId: this.lastID });
-        }
-    );
-});
-
-app.get('/api/cart/:user_id', (req, res) => {
+// Cart APIs
+app.get("/api/cart/:userId", (req, res) => {
+    const userId = req.params.userId;
     const query = `
-        SELECT cart.id as cart_id, cart.quantity, products.* 
-        FROM cart 
-        JOIN products ON cart.product_id = products.id 
+        SELECT cart.cart_id, cart.quantity, products.product_id, products.name, products.price, products.category, products.image
+        FROM cart
+        JOIN products ON cart.product_id = products.product_id
         WHERE cart.user_id = ?
     `;
-    db.all(query, [req.params.user_id], (err, rows) => {
-        if (err) return res.status(500).json({ error: err.message });
+    db.all(query, [userId], (err, rows) => {
+        if (err) {
+            return res.status(500).json({ message: "Database error" });
+        }
         res.json(rows);
     });
 });
 
-app.delete('/api/cart/:id', (req, res) => {
-    db.run(`DELETE FROM cart WHERE id = ?`, [req.params.id], function(err) {
-        if (err) return res.status(500).json({ error: err.message });
+app.post("/api/cart", (req, res) => {
+    const { user_id, product_id, quantity } = req.body;
+    const query = `INSERT INTO cart (user_id, product_id, quantity) VALUES (?, ?, ?)`;
+    db.run(query, [user_id, product_id, quantity || 1], function(err) {
+        if (err) {
+            console.error("CART SQL ERROR:", err.message);
+            return res.status(500).json({ message: "Failed to add to cart: " + err.message });
+        }
+        res.json({ message: "Added to cart successfully" });
+    });
+});
+
+app.put("/api/cart/:cartId", (req, res) => {
+    const cartId = req.params.cartId;
+    const { quantity } = req.body;
+    db.run(`UPDATE cart SET quantity = ? WHERE cart_id = ?`, [quantity, cartId], function(err) {
+        if (err) {
+            return res.status(500).json({ message: "Failed to update quantity" });
+        }
+        res.json({ message: "Quantity updated" });
+    });
+});
+
+app.delete("/api/cart/:cartId", (req, res) => {
+    const cartId = req.params.cartId;
+    db.run(`DELETE FROM cart WHERE cart_id = ?`, [cartId], function(err) {
+        if (err) {
+            return res.status(500).json({ message: "Failed to remove item" });
+        }
         res.json({ message: "Item removed from cart" });
     });
 });
 
-app.post('/api/wishlist', (req, res) => {
+// Wishlist APIs
+app.get("/api/wishlist/:userId", (req, res) => {
+    const userId = req.params.userId;
+    const query = `
+        SELECT wishlist.wishlist_id, products.* 
+        FROM wishlist 
+        JOIN products ON wishlist.product_id = products.product_id 
+        WHERE wishlist.user_id = ?
+    `;
+    db.all(query, [userId], (err, rows) => {
+        if (err) return res.status(500).json({ message: "Database error" });
+        res.json(rows);
+    });
+});
+
+app.post("/api/wishlist", (req, res) => {
     const { user_id, product_id } = req.body;
-    db.run(`INSERT INTO wishlist (user_id, product_id) VALUES (?, ?)`, 
-        [user_id, product_id], 
-        function(err) {
-            if (err) return res.status(500).json({ error: err.message });
-            res.json({ message: "Added to wishlist successfully", wishlistId: this.lastID });
+    db.run(
+        `INSERT INTO wishlist (user_id, product_id) VALUES (?, ?)`,
+        [user_id, product_id],
+        function (err) {
+            if (err) {
+                if (err.message.includes("UNIQUE")) {
+                    return res.status(400).json({ message: "Product already in wishlist" });
+                }
+                return res.status(500).json({ message: "Database error" });
+            }
+            res.json({ message: "Added to wishlist", wishlist_id: this.lastID });
         }
     );
 });
 
-app.get('/api/wishlist/:user_id', (req, res) => {
-    const query = `
-        SELECT wishlist.id as wishlist_id, products.* 
-        FROM wishlist 
-        JOIN products ON wishlist.product_id = products.id 
-        WHERE wishlist.user_id = ?
-    `;
-    db.all(query, [req.params.user_id], (err, rows) => {
-        if (err) return res.status(500).json({ error: err.message });
-        res.json(rows);
-    });
-});
-
-app.delete('/api/wishlist/:id', (req, res) => {
-    db.run(`DELETE FROM wishlist WHERE id = ?`, [req.params.id], function(err) {
-        if (err) return res.status(500).json({ error: err.message });
+app.delete("/api/wishlist/:wishlistId", (req, res) => {
+    const wishlistId = req.params.wishlistId;
+    db.run(`DELETE FROM wishlist WHERE wishlist_id = ?`, [wishlistId], function (err) {
+        if (err) return res.status(500).json({ message: "Database error" });
         res.json({ message: "Item removed from wishlist" });
     });
 });
 
-app.get('/api/order-details/:order_id', (req, res) => {
-    const query = `
-        SELECT order_items.*, products.name, products.price 
-        FROM order_items 
-        JOIN products ON order_items.product_id = products.id 
-        WHERE order_items.order_id = ?
-    `;
-    db.all(query, [req.params.order_id], (err, rows) => {
-        if (err) return res.status(500).json({ error: err.message });
+// Orders APIs
+app.get("/api/orders/:userId", (req, res) => {
+    const userId = req.params.userId;
+    db.all(`SELECT * FROM orders WHERE user_id = ?`, [userId], (err, rows) => {
+        if (err) {
+            return res.status(500).json({ message: "Database error" });
+        }
         res.json(rows);
     });
 });
 
-// 8. AI CHATBOT ENDPOINT
-app.post('/api/chat', (req, res) => {
-    const { message } = req.body;
-    
-    let reply = "Hello! Welcome to Charu Mart. I can help you find products, check order statuses, or answer questions about our marketplace.";
-    
-    const lowerMsg = message.toLowerCase();
-    if (lowerMsg.includes('seller') || lowerMsg.includes('sell')) {
-        reply = "Sellers can easily list products, set prices, and manage inventory through the Seller Dashboard!";
-    } else if (lowerMsg.includes('payment') || lowerMsg.includes('pay')) {
-        reply = "Charu Mart uses mock payment confirmation for safe, simulated checkouts during your capstone demo.";
-    } else if (lowerMsg.includes('admin')) {
-        reply = "The Admin suite allows user moderation, viewing all platform orders, and managing store listings.";
-    }
-
-    res.json({ reply });
+app.post("/api/orders", (req, res) => {
+    const { user_id, total_amount, address, payment_method } = req.body;
+    const query = `INSERT INTO orders (user_id, total_amount, address, payment_method, payment_status, order_status) VALUES (?, ?, ?, ?, 'Completed', 'Placed')`;
+    db.run(query, [user_id, total_amount, address, payment_method], function(err) {
+        if (err) {
+            return res.status(500).json({ message: "Failed to place order" });
+        }
+        const orderId = this.lastID;
+        db.run(`DELETE FROM cart WHERE user_id = ?`, [user_id], () => {
+            res.json({ message: "Order placed successfully", order_id: orderId });
+        });
+    });
 });
 
-// Start Server
+// Admin APIs
+app.get("/api/admin/users", (req, res) => {
+    db.all(`SELECT user_id, name, email, role FROM users`, [], (err, rows) => {
+        if (err) {
+            return res.status(500).json({ message: "Database error" });
+        }
+        res.json(rows);
+    });
+});
+
+app.get("/api/admin/orders", (req, res) => {
+    db.all(`SELECT * FROM orders`, [], (err, rows) => {
+        if (err) {
+            return res.status(500).json({ message: "Database error" });
+        }
+        res.json(rows);
+    });
+});
+
+app.put("/api/admin/orders/:orderId", (req, res) => {
+    const orderId = req.params.orderId;
+    const { order_status } = req.body;
+    db.run(`UPDATE orders SET order_status = ? WHERE order_id = ?`, [order_status, orderId], function(err) {
+        if (err) {
+            return res.status(500).json({ message: "Failed to update order status" });
+        }
+        res.json({ message: "Order status updated" });
+    });
+});
+
+app.put("/api/admin/products/:productId", (req, res) => {
+    const productId = req.params.productId;
+    const { name, category, price, stock, seller_id } = req.body;
+    const query = `UPDATE products SET name = ?, category = ?, price = ?, stock = ?, seller_id = ? WHERE product_id = ?`;
+    db.run(query, [name, category, price, stock, seller_id, productId], function(err) {
+        if (err) {
+            return res.status(500).json({ message: "Failed to update product" });
+        }
+        res.json({ message: "Product updated successfully" });
+    });
+});
+
+app.delete("/api/admin/products/:productId", (req, res) => {
+    const productId = req.params.productId;
+    db.run(`DELETE FROM products WHERE product_id = ?`, [productId], function(err) {
+        if (err) {
+            return res.status(500).json({ message: "Failed to delete product" });
+        }
+        res.json({ message: "Product deleted successfully" });
+    });
+});
+
 app.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}`);
 });

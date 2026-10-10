@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Wishlist | Charu Mart</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        body { background: #f4f6f9; color: #1e293b; min-height: 100vh; }
+        .header { padding: 20px 7%; background: #0f172a; color: white; display: flex; justify-content: space-between; align-items: center; }
+        .header h1 { font-size: 20px; font-weight: 700; }
+        .back-btn { text-decoration: none; color: #ffffff; font-size: 13px; font-weight: 600; }
+        .container { width: 86%; max-width: 1100px; margin: 40px auto; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
+        .card { background: white; padding: 16px; border-radius: 12px; border: 1px solid #e2e8f0; }
+        .card img { width: 100%; height: 160px; object-fit: cover; border-radius: 8px; }
+        .card h3 { font-size: 16px; margin: 10px 0 4px; }
+        .card p { color: #64748b; font-size: 13px; margin-bottom: 8px; }
+        .card strong { font-size: 15px; color: #0f172a; display: block; margin-bottom: 12px; }
+        .actions { display: flex; gap: 8px; }
+        .btn { flex: 1; padding: 8px; border: none; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; }
+        .btn-cart { background: #2563eb; color: white; }
+        .btn-remove { background: #ffeeec; color: #dc2626; }
+        .empty { background: white; padding: 40px; text-align: center; border-radius: 12px; border: 1px solid #e2e8f0; }
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <h1>♡ My Wishlist | Charu Mart</h1>
+    <a href="home.html" class="back-btn">← Continue Shopping</a>
+</header>
+
+<main class="container">
+    <div id="wishlistContainer">
+        <p>Loading wishlist...</p>
+    </div>
+</main>
+
+<script>
+function getUserId() {
+    let user = null;
+    try { user = JSON.parse(localStorage.getItem("user")); } catch (e) {}
+    if (user && (user.user_id || user.id)) return Number(user.user_id || user.id);
+    const storedId = localStorage.getItem("user_id");
+    return storedId ? Number(storedId) : null;
+}
+
+async function loadWishlist() {
+    const userId = getUserId();
+    const container = document.getElementById("wishlistContainer");
+
+    if (!userId) {
+        container.innerHTML = `<div class="empty">Please login to view your wishlist.</div>`;
+        return;
+    }
+
+    try {
+        const response = await fetch(`http://localhost:5000/api/wishlist/${userId}`);
+        const items = await response.json();
+
+        if (!response.ok) throw new Error("Failed to load wishlist");
+
+        if (items.length === 0) {
+            container.innerHTML = `
+                <div class="empty">
+                    <h3>Your Wishlist is Empty</h3>
+                    <br>
+                    <a href="home.html" style="color:#2563eb; font-weight:600;">Explore Products</a>
+                </div>
+            `;
+            return;
+        }
+
+        container.className = "grid";
+        container.innerHTML = items.map(item => `
+            <div class="card">
+                <img src="${item.image || 'image/placeholder.jpg'}" alt="${item.name}" onerror="this.style.display='none';">
+                <h3>${item.name}</h3>
+                <p>${item.category}</p>
+                <strong>₹${Number(item.price).toLocaleString("en-IN")}</strong>
+                <div class="actions">
+                    <button class="btn btn-cart" onclick="addToCart(${item.product_id})">Add to Cart</button>
+                    <button class="btn btn-remove" onclick="removeFromWishlist(${item.wishlist_id})">Remove</button>
+                </div>
+            </div>
+        `).join("");
+
+    } catch (err) {
+        console.error(err);
+        container.innerHTML = `<div class="empty">Unable to load wishlist.</div>`;
+    }
+}
+
+async function removeFromWishlist(wishlistId) {
+    try {
+        const res = await fetch(`http://localhost:5000/api/wishlist/${wishlistId}`, { method: "DELETE" });
+        if (res.ok) loadWishlist();
+    } catch (err) {
+        alert("Failed to remove item.");
+    }
+}
+
+async function addToCart(productId) {
+    const userId = getUserId();
+    try {
+        const res = await fetch("http://localhost:5000/api/cart", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ user_id: userId, product_id: productId, quantity: 1 })
+        });
+        if (res.ok) alert("Added to cart!");
+    } catch (err) {
+        alert("Failed to add to cart.");
+    }
+}
+
+loadWishlist();
+</script>
+
+</body>
+</html>
